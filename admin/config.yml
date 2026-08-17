@@ -10,9 +10,6 @@ display_url: https://mollymeasells.com
 logo_url: https://mollymeasells.com/assets/img/molly.jpg
 
 collections:
-  # ------------------------------------------------
-  # 1. Site settings: fundraising total + links
-  # ------------------------------------------------
   - name: "settings"
     label: "Site Settings"
     files:
@@ -42,9 +39,6 @@ collections:
             name: "email"
             widget: "string"
 
-  # ------------------------------------------------
-  # 2. Field notes: short updates
-  # ------------------------------------------------
   - name: "notes"
     label: "Field Notes"
     files:
@@ -57,7 +51,7 @@ collections:
             name: "notes"
             widget: "list"
             label_singular: "Note"
-            summary: "{{fields.date}} — {{fields.title}}"
+            summary: "{{fields.date}} - {{fields.title}}"
             fields:
               - label: "Date"
                 name: "date"
@@ -71,106 +65,6 @@ collections:
                 widget: "markdown"
                 hint: "Full formatting available. Bold, italic, links, lists, quotes, and images."
 
-  # ------------------------------------------------
-  # 3. Photo gallery
-  # ------------------------------------------------
-  - name: "gallery"
-    label: "Photos"
-    files:
-      - name: "gallery"
-        label: "Photo Gallery"
-        file: "content/gallery.json"
-        description: "Upload photos for the Photos page."
-        fields:
-          - label: "Photos"
-            name: "photos"
-            widget: "list"
-            label_singular: "Photo"
-            summary: "{{fields.caption}}"
-            fields:
-              - label: "Photo"
-                name: "image"
-                widget: "image"
-              - label: "Caption"
-                name: "caption"
-                widget: "string"
-                required: false
-backend:
-  name: git-gateway
-  branch: main
-
-media_folder: "assets/uploads"
-public_folder: "/assets/uploads"
-
-site_url: https://mollymeasells.com
-display_url: https://mollymeasells.com
-logo_url: https://mollymeasells.com/assets/img/molly.jpg
-
-collections:
-  # ------------------------------------------------
-  # 1. Site settings: fundraising total + links
-  # ------------------------------------------------
-  - name: "settings"
-    label: "Site Settings"
-    files:
-      - name: "site"
-        label: "Fundraising & Links"
-        file: "content/site.json"
-        description: "Update the amount raised and your links here."
-        fields:
-          - label: "Amount raised so far ($)"
-            name: "raised"
-            widget: "number"
-            value_type: "int"
-            min: 0
-            hint: "Just the number. No dollar sign, no commas. Example: 3250"
-          - label: "Total goal ($)"
-            name: "goal"
-            widget: "number"
-            value_type: "int"
-            default: 10000
-          - label: "Giving link"
-            name: "give"
-            widget: "string"
-          - label: "Substack link"
-            name: "substack"
-            widget: "string"
-          - label: "Contact email"
-            name: "email"
-            widget: "string"
-
-  # ------------------------------------------------
-  # 2. Field notes: short updates
-  # ------------------------------------------------
-  - name: "notes"
-    label: "Field Notes"
-    files:
-      - name: "notes"
-        label: "Short Updates"
-        file: "content/notes.json"
-        description: "Short posts that appear on the Home and Journey pages. Newest first."
-        fields:
-          - label: "Notes"
-            name: "notes"
-            widget: "list"
-            label_singular: "Note"
-            summary: "{{fields.date}} — {{fields.title}}"
-            fields:
-              - label: "Date"
-                name: "date"
-                widget: "string"
-                hint: "However you want it to read. Example: September 24"
-              - label: "Title"
-                name: "title"
-                widget: "string"
-              - label: "Note"
-                name: "body"
-                widget: "text"
-                hint: "A few sentences. Save the long stories for Substack."
-
-  # ------------------------------------------------
-  # 3. Photo gallery
-  # ------------------------------------------------
   - name: "gallery"
     label: "Photos"
     files:
