@@ -408,6 +408,46 @@ h3 { font-size: clamp(1.35rem, 2.4vw, 1.75rem); }
 .note__t { font-family: var(--display); font-size: 1.5rem; margin: 0 0 .5rem; line-height: 1.2; }
 .note__b { color: var(--ink-soft); margin: 0; }
 
+/* Markdown inside a field note */
+.note__b > *:first-child { margin-top: 0; }
+.note__b > *:last-child { margin-bottom: 0; }
+.note__b p { margin: 0 0 .9rem; }
+.note__b h3, .note__b h4, .note__b h5, .note__b h6 {
+  font-family: var(--display);
+  color: var(--ink);
+  line-height: 1.25;
+  margin: 1.5rem 0 .5rem;
+}
+.note__b h3 { font-size: 1.25rem; }
+.note__b h4 { font-size: 1.0625rem; }
+.note__b h5, .note__b h6 { font-size: 1rem; }
+.note__b strong { color: var(--ink); font-weight: 600; }
+.note__b em { font-style: italic; }
+.note__b a { color: var(--sea); text-decoration: underline; text-underline-offset: 2px; }
+.note__b a:hover { color: var(--coral); }
+.note__b ul, .note__b ol { margin: 0 0 .9rem; padding-left: 1.25rem; }
+.note__b li { margin-bottom: .35rem; }
+.note__b blockquote {
+  margin: 1.1rem 0;
+  padding: .15rem 0 .15rem 1.1rem;
+  border-left: 2px solid var(--coral);
+  font-family: var(--display);
+  font-size: 1.1875rem;
+  line-height: 1.4;
+  color: var(--sea-deep);
+}
+.note__b code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .875em;
+  background: var(--foam);
+  padding: .12em .4em;
+  border-radius: 4px;
+  color: var(--ink);
+}
+.note__b img { border-radius: 12px; margin: 1.1rem 0; }
+.note__b hr { border: 0; height: 1px; background: var(--line); margin: 1.5rem 0; }
+
+
 /* ---------- Gallery ---------- */
 .gal { columns: 3; column-gap: 1rem; }
 .gal__item { break-inside: avoid; margin-bottom: 1rem; position: relative; }
