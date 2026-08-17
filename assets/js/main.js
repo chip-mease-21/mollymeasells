@@ -3,6 +3,97 @@
 (function () {
   "use strict";
 
+  /* ---------- Markdown ----------
+     Small self-contained renderer so field notes work even on slow
+     connections with no CDN available. Handles headings, bold, italic,
+     links, images, lists, quotes, code, rules, and paragraphs. */
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function inline(s) {
+    return s
+      .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g,
+        '<img src="$2" alt="$1" loading="lazy">')
+      .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/\x60([^\x60]+)\x60/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>")
+      .replace(/(^|[^_])_([^_\n]+)_/g, "$1<em>$2</em>");
+  }
+
+  function mdToHtml(src) {
+    if (!src) { return ""; }
+    var lines = escapeHtml(String(src).replace(/\r\n?/g, "\n")).split("\n");
+    var out = [];
+    var para = [];
+    var list = null;
+    var quote = [];
+
+    function flushPara() {
+      if (para.length) {
+        out.push("<p>" + inline(para.join(" ")) + "</p>");
+        para = [];
+      }
+    }
+    function flushList() {
+      if (list) { out.push("</" + list + ">"); list = null; }
+    }
+    function flushQuote() {
+      if (quote.length) {
+        out.push("<blockquote>" + inline(quote.join(" ")) + "</blockquote>");
+        quote = [];
+      }
+    }
+    function flushAll() { flushPara(); flushList(); flushQuote(); }
+
+    lines.forEach(function (raw) {
+      var line = raw.trim();
+
+      if (!line) { flushAll(); return; }
+
+      var h = line.match(/^(#{1,4})\s+(.*)$/);
+      if (h) {
+        flushAll();
+        var lvl = Math.min(h[1].length + 2, 6);
+        out.push("<h" + lvl + ">" + inline(h[2]) + "</h" + lvl + ">");
+        return;
+      }
+
+      if (/^(-{3,}|\*{3,}|_{3,})$/.test(line)) {
+        flushAll();
+        out.push("<hr>");
+        return;
+      }
+
+      var q = line.match(/^&gt;\s?(.*)$/);
+      if (q) { flushPara(); flushList(); quote.push(q[1]); return; }
+
+      var ul = line.match(/^[-*+]\s+(.*)$/);
+      if (ul) {
+        flushPara(); flushQuote();
+        if (list !== "ul") { flushList(); out.push("<ul>"); list = "ul"; }
+        out.push("<li>" + inline(ul[1]) + "</li>");
+        return;
+      }
+
+      var ol = line.match(/^\d+[.)]\s+(.*)$/);
+      if (ol) {
+        flushPara(); flushQuote();
+        if (list !== "ol") { flushList(); out.push("<ol>"); list = "ol"; }
+        out.push("<li>" + inline(ol[1]) + "</li>");
+        return;
+      }
+
+      flushList(); flushQuote();
+      para.push(line);
+    });
+
+    flushAll();
+    return out.join("");
+  }
+
   /* ---------- Sticky nav border ---------- */
   var nav = document.querySelector(".nav");
   if (nav) {
@@ -142,9 +233,9 @@
           var t = document.createElement("h3");
           t.className = "note__t";
           t.textContent = n.title || "";
-          var b = document.createElement("p");
+          var b = document.createElement("div");
           b.className = "note__b";
-          b.textContent = n.body || "";
+          b.innerHTML = mdToHtml(n.body || "");
           wrap.appendChild(t);
           wrap.appendChild(b);
           el.appendChild(date);
