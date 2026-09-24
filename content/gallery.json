@@ -1,3 +1,8 @@
 {
-  "photos": []
+  "photos": [
+    {
+      "image": "/assets/uploads/molly-at-airport.jpg",
+      "caption": "Molly at the airport on September 23rd."
+    }
+  ]
 }
